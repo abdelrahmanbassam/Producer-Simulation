@@ -45,16 +45,17 @@ export default {
 
     },
     play(){
+      this.$emit('addArrow');
       console.log("play");
     },
     stop(){
       console.log("stop");
     },
     addMachine(){
-      console.log("Add machine");
+      this.$emit('addMachine');
     },
     addQueue(){
-      console.log("Add Queue");
+      this.$emit('addQueue');
     },
     stopInput(){
       console.log("stop input");
