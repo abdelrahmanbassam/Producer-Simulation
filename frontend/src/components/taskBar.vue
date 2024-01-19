@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }">
+      <v-icon v-if="icons[index]!==''">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
   </div>
 </template>
@@ -13,6 +14,7 @@ export default {
   data(){
     return{
     buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation"],
+    icons:["mdi-play","mdi-pause",'mdi-factory','mdi-queue-first-in-last-out','','mdi-replay',''],
     clickedButton:null
     }
   },
@@ -75,7 +77,7 @@ export default {
 <style scoped>
 .hello{
   display: flex;
-  flex-wrap: wrap; /* Allow buttons to wrap to the next line if necessary */
+  flex-wrap: wrap; 
   justify-content: center;  
   height: 7vh;
   width: auto;
