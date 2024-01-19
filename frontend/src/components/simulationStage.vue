@@ -90,10 +90,14 @@ export default {
             //   newShape.y-=25/2;
             newShape.type='queue'
             newShape.fill='red'
+            newShape.text='Q'+this.newQueueId.toString();;
+            this.newQueueId++;
           }
           else if(this.isDrawingMachine){
             newShape.type='machine'
             newShape.fill='blue'
+            newShape.text='M'+this.newMachineId.toString();;
+            this.newMachineId++;
           }
           this.addShape(newShape);
           
@@ -121,50 +125,58 @@ export default {
                 fill: 'black',      // Fill color
                 stroke: 'black',    // Stroke color
                 strokeWidth: 2      // Stroke width
-        });
-      } 
-      else if (shape.type === 'machine') {
-        newShape = new Konva.Circle(shape);
-        newShape.attrs.stroke='black';
-        newShape.attrs.radius=25;
-
+            });
+        } 
+        else if (shape.type === 'machine') {
+            newShape = new Konva.Circle(shape);
+            newShape.attrs.stroke='black';
+            newShape.attrs.radius=40;
+            
       }
       else if (shape.type === 'queue') {
-        newShape=new Konva.Rect(shape);
-        newShape.attrs.stroke='black';
-        newShape.attrs.offsetX=25, // Half of the width
-        newShape.attrs.offsetY=15  // Half of the height
-        newShape.attrs.width=50;
-        newShape.attrs.height=30;
-      }
-      
-    //   let text = new Konva.Text({
-    //     x: newShape.x(),
-    //     y: newShape.y(),
-    //     text: shape.text,
-    //     fontSize: 18,
-    //     fontFamily: 'Calibri',
-    //     fill: 'white',
-    //     align: 'center',
-    //     verticalAlign: 'middle'
-    //   });  
-
-      newShape.on('click', () => {
+          newShape=new Konva.Rect(shape);
+          newShape.attrs.stroke='black';
+          newShape.attrs.width=80;
+          newShape.attrs.height=50;
+          newShape.attrs.offsetX=40, // Half of the width
+          newShape.attrs.offsetY=25  // Half of the height
+        }
+        
+        let text = new Konva.Text({
+            x: newShape.attrs.x-10,
+            y: newShape.attrs.y-10,
+            text: shape.text,
+            fontSize: 15,
+            fontFamily: 'Calibri',
+            fill: 'white',
+            align: 'center',
+            verticalAlign: 'middle'
+        });  
+        
+        let group = new Konva.Group();
+        newShape.on('click', () => {
         if(this.isDrawingArrow&&!this.isStartedArrow){
             this.isStartedArrow=true;
             this.arrowSrc=newShape;
         }
         else if(this.isStartedArrow){
-            this.arrowDest=newShape;
-            let arrow = {type:'arrow',points: this.adjustPoints(this.arrowSrc,this.arrowDest)} // Define the start and end points of the arrow
-            this.addShape(arrow);
-            this.isStartedArrow=false; 
+                    console.log(JSON.stringify(newShape, null, 2));
+                    console.log(JSON.stringify(this.arrowSrc, null, 2));
+
+            if(newShape.attrs.x != this.arrowSrc.attrs.x || newShape.attrs.y != this.arrowSrc.attrs.y){
+                
+             this.arrowDest=newShape;
+             let arrow = {type:'arrow',points: this.adjustPoints(this.arrowSrc,this.arrowDest)} // Define the start and end points of the arrow
+             this.addShape(arrow);
+            
+            }
+             
+            this.isStartedArrow=false;
         }
       });
 
-      let group = new Konva.Group();
       group.add(newShape);
-    //   group.add(text);
+      group.add(text);
 
       this.layer.add(group);
     },
@@ -196,27 +208,27 @@ export default {
        switch(dir){
         case 'left':
           points[0]-=this.getDimentions(arrowSrc,dir);
-          points[2]+=this.getDimentions(arrowSrc,dir);
+          points[2]+=this.getDimentions(arrowDest,dir);
         break;
 
         case 'right':
           points[0]+=this.getDimentions(arrowSrc,dir);
-          points[2]-=this.getDimentions(arrowSrc,dir);
+          points[2]-=this.getDimentions(arrowDest,dir);
         break;
         case 'up':
           points[1]-=this.getDimentions(arrowSrc,dir);
-          points[3]+=this.getDimentions(arrowSrc,dir);
+          points[3]+=this.getDimentions(arrowDest,dir);
         break;
 
         case 'down':
           points[1]+=this.getDimentions(arrowSrc,dir);
-          points[3]-=this.getDimentions(arrowSrc,dir);
+          points[3]-=this.getDimentions(arrowDest,dir);
         break;
        }
       
        return points;
     },
-   getDimentions(shape,dir){
+    getDimentions(shape,dir){
     if(shape.attrs.radius==null){
       if(dir=='right'||dir=='left')
        return shape.attrs.width/2;
@@ -224,7 +236,7 @@ export default {
       return shape.attrs.height/2;
     }
      return shape.attrs.radius;
-   }
+    }
     
    }
     
