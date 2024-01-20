@@ -28,32 +28,36 @@ export default {
       this.isActive=true;
     },
     handleclick(index){
-      if(index!==6&&index!==4){
+      if(index!==2&&index!==4){
       this.clickedButton=index;
       }
       switch(index){
         case 0:
-          this.disablebutton[2]=true;
-          this.disablebutton[3]=true;
+          this.disablebutton[5]=true;
+          this.disablebutton[6]=true;
           this.disablebutton[7]=true;
           this.play();
           break;
         case 1:
-        this.disablebutton[2]=false;
-          this.disablebutton[3]=false;
-          this.disablebutton[7]=false;
+          this.disablebutton[5]=true;
+          this.disablebutton[6]=true;
+          this.disablebutton[7]=true;
           this.stop();
           break
         case 2:
         this.stopInput();
           break;
         case 3:
+          this.disablebutton[5]=true;
+          this.disablebutton[6]=true;
+          this.disablebutton[7]=true;
+          this.clickedButton=0
           this.replay();
           break;
         case 4:
         this.clickedButton=null;
-          this.disablebutton[2]=false;
-          this.disablebutton[3]=false;
+          this.disablebutton[5]=false;
+          this.disablebutton[6]=false;
           this.disablebutton[7]=false;
           this.newSim();
           break;
