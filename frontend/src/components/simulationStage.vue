@@ -54,7 +54,8 @@ export default {
     clear(){
       this.isDrawingQueue=false;
       this.isDrawingMachine=false;
-      
+      this.isDrawingArrow=false;
+      this.isStartedArrow=false;
     },
     // async startUp() {
     //  await this.createKonvaStage();
