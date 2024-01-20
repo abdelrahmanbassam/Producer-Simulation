@@ -52,9 +52,6 @@ public class Machine  implements Runnable{
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Color getDefaultColor() {
         return defaultColor;
@@ -94,7 +91,7 @@ public class Machine  implements Runnable{
     }
 
     public void detach(Queue removeQueue){
-        observerList.add(removeQueue);
+        observerList.remove(removeQueue);
     }
 
     public void process(Product currentProduct){
@@ -102,15 +99,23 @@ public class Machine  implements Runnable{
 //        this.currentColor=currentProduct.getcolor();
 
         Random randtime = new Random();
-        this.serviceTime=randtime.nextInt(3000);
+        this.serviceTime=randtime.nextInt(2,10);
+        this.serviceTime=this.serviceTime*1000;
         try {
             Thread.sleep(this.serviceTime);
         } catch (InterruptedException e) {
             e.printStackTrace(); // Handle the exception as needed
         }
 
-        notify();
+//        outQueue.addproduct(currentProduct);
+        notifyObservers();
 
+    }
+
+    public void notifyObservers() {
+        for (Queue observer : observerList) {
+//            observer.update(this);
+        }
     }
 
     @Override
