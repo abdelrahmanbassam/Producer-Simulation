@@ -1,9 +1,9 @@
 <template>
   <div class="hello">
-    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }">
+    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }" :disabled=disablebutton[index] >
       <v-icon v-if="icons[index]!==''" :color="iconcolors[index]">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
-      
+
   </div>
 </template>
 
@@ -17,21 +17,29 @@ export default {
     buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation",'connect items'],
     icons:["mdi-play","mdi-stop",'mdi-factory','mdi-queue-first-in-last-out','mdi-pause','mdi-replay','','mdi-arrow-right-bold'],
     iconcolors:["green",'red','black','black','red','black','black'],
+    disablebutton:Array(8).fill(false),
     clickedButton:null,
     customcolors:[],
     isActive:false,
+
   }),
   methods:{
     open(){
       this.isActive=true;
     },
     handleclick(index){
+      if(index!==6&&index!==4){
       this.clickedButton=index;
+      }
       switch(index){
         case 0:
+          this.disablebutton[2]=true
+          this.disablebutton[3]=true
           this.play();
           break;
         case 1:
+        this.disablebutton[2]=false
+          this.disablebutton[3]=false
           this.stop();
           break
         case 2:
@@ -97,7 +105,7 @@ export default {
   display: flex;
   flex-wrap: wrap; 
   justify-content: center;  
-  height: 7vh;
+  height: 9vh;
   width: auto;
   /* background-color: grey; */
   background-color: #365486;
@@ -112,5 +120,13 @@ export default {
 .btn.clicked{
   background-color: dodgerblue;
   color: black;
+}
+input::placeholder{
+  text-align: center;
+}
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
