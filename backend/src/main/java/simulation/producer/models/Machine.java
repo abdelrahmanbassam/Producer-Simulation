@@ -3,34 +3,49 @@ package simulation.producer.models;
 import simulation.producer.models.observer.Subject;
 
 import java.awt.*;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class Machine  implements Runnable{
+public class Machine extends Subject implements Runnable{
 
-    private int count=0;
-
-    private List<Queue> observerList=new ArrayList<>();
-    private Queue outQueue;
+    private static int count = 0;
+    private static Color defaultColor;
+    
     private int id;
-    private Color defaultColor;
+    private String x;
+    private String y;
+
+    private List<Queue> observerList = new ArrayList<>();
+    private Queue outQueue;
     private Color currentColor;
     private int serviceTime;
-//    private boolean state;
+    private boolean state = true;
 
-    public Machine(){
+    public Machine(String x, String y){
         this.id = count++;
-        Random randcol = new Random();
-        this.currentColor = new Color(randcol.nextInt(256), randcol.nextInt(256), randcol.nextInt(256));
+        this.x = x;
+        this.y = y;
+        this.serviceTime = (new Random()).nextInt(2, 8)*1000;
     }
 
-    public Machine(Color color){
-        this.id = count++;
-        this.defaultColor = color;
+    public String getX(){
+        return this.x;
     }
+
+    public void setX(String x){
+        this.x = x;
+    }
+    
+    public String getY(){
+        return this.y;
+    }
+
+    public void setY(String y){
+        this.y = y;
+    }
+
 
     public List<Queue> getObserverList() {
         return observerList;
@@ -57,9 +72,9 @@ public class Machine  implements Runnable{
         return defaultColor;
     }
 
-    public void setDefaultColor(Color defaultColor) {
-        this.defaultColor = defaultColor;
-    }
+    // public void setDefaultColor(Color defaultColor) {
+    //     defaultColor = defaultColor;
+    // }
 
     public Color getCurrentColor() {
         return currentColor;
@@ -77,13 +92,9 @@ public class Machine  implements Runnable{
         this.serviceTime = serviceTime;
     }
 
-//    public boolean isState() {
-//        return state;
-//    }
-//
-//    public void setReady(boolean ready) {
-//        state = ready;
-//    }
+    public boolean isReady() {
+        return this.state;
+    }
 
 
     public void attach(Queue addQueue){
@@ -94,32 +105,41 @@ public class Machine  implements Runnable{
         observerList.remove(removeQueue);
     }
 
-    public void process(Product currentProduct){
-
-//        this.currentColor=currentProduct.getcolor();
-
-        Random randtime = new Random();
-        this.serviceTime=randtime.nextInt(2,10);
-        this.serviceTime=this.serviceTime*1000;
+    public synchronized void process(Product currentProduct){
+        // this.state = false;
+        this.currentColor = currentProduct.getColor();
+        // Random randtime = new Random();
+        // this.serviceTime=randtime.nextInt(2,10)*1000;
         try {
+            System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
             Thread.sleep(this.serviceTime);
         } catch (InterruptedException e) {
-            e.printStackTrace(); // Handle the exception as needed
+            e.printStackTrace();
         }
 
-//        outQueue.addproduct(currentProduct);
-        notifyObservers();
-
+        //send prcessed product to next queue
+        outQueue.addProduct(currentProduct);
+        
+        this.currentColor = this.defaultColor;
+        // this.state = true;
     }
 
     public void notifyObservers() {
         for (Queue observer : observerList) {
-//            observer.update(this);
+            System.out.println("Machine "+this.id+" is notifying queue "+observer.getId());
+            observer.update(this);
         }
     }
 
     @Override
     public void run() {
+        while(true){
+            try {
+                notifyObservers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
