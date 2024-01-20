@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Product {
     private static int count = 0;
-    private Color color;
     private int id;
+    private Color color;
 
     public Product() {
         this.id = count++;

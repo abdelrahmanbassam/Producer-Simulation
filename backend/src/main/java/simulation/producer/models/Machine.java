@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class Machine  implements Runnable{
+public class Machine extends Subject implements Runnable{
 
-    private int count=0;
+    private static int count=0;
+    private int id = 0;
 
     private List<Queue> observerList=new ArrayList<>();
-    private Queue outQueue;
-    private int id;
+    private Queue outQueue = new Queue();
     private Color defaultColor;
     private Color currentColor;
     private int serviceTime;
@@ -94,32 +94,39 @@ public class Machine  implements Runnable{
         observerList.remove(removeQueue);
     }
 
-    public void process(Product currentProduct){
-
-//        this.currentColor=currentProduct.getcolor();
-
+    public synchronized void process(Product currentProduct){
+        this.currentColor = currentProduct.getColor();
         Random randtime = new Random();
         this.serviceTime=randtime.nextInt(2,10);
         this.serviceTime=this.serviceTime*1000;
         try {
+            System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
             Thread.sleep(this.serviceTime);
         } catch (InterruptedException e) {
-            e.printStackTrace(); // Handle the exception as needed
+            e.printStackTrace();
         }
-
-//        outQueue.addproduct(currentProduct);
-        notifyObservers();
-
+        this.currentColor = this.defaultColor;
+        //send prcessed product to next queue
+        outQueue.addProduct(currentProduct);
     }
 
     public void notifyObservers() {
         for (Queue observer : observerList) {
-//            observer.update(this);
+            System.out.println("Machine "+this.id+" is notifying queue "+observer.getId());
+            observer.update(this);
         }
     }
 
     @Override
     public void run() {
+        while(true){
+            try {
+                // Thread.sleep(1000);
+                notifyObservers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

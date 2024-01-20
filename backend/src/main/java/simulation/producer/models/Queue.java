@@ -3,6 +3,7 @@ package simulation.producer.models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import simulation.producer.models.observer.Observer;
 import simulation.producer.models.observer.Subject;
@@ -10,17 +11,22 @@ import simulation.producer.models.observer.Subject;
 public class Queue implements Observer, Runnable{
     private static int count = 0;
     private int id;
-    private BlockingQueue<Product> products;
-    private List<Machine> subjects = new ArrayList<Machine>();
+    private BlockingQueue<Product> products = new LinkedBlockingQueue<>();
+    // private List<Machine> subjects = new ArrayList<Machine>();
 
     public Queue(){
         this.id = count++;
     }
 
     @Override
-    public void update(Subject subject) {
+    public synchronized void update(Subject subject) {
         try{
-            // subject.process(products.take());
+            if(products.isEmpty()){
+                System.out.println("Queue " + this.id + " is empty");
+                return;
+            }
+            System.out.println("Product" + products.peek().getId() + " processed by machine " + ((Machine)subject).getId());
+            ((Machine)subject).process(products.take());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -33,6 +39,7 @@ public class Queue implements Observer, Runnable{
     public void addProduct(Product product){
         try {
             products.put(product);
+            System.out.println("Product" + product.getId() + " added to queue " + this.id);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -50,11 +57,11 @@ public class Queue implements Observer, Runnable{
         return this.id;
     }
 
-    public void attach (Machine subject){
-        subjects.add(subject);
-    }
+    // public void attach (Machine subject){
+    //     subjects.add(subject);
+    // }
     
-    public void detach (Machine subject){
-        subjects.remove(subject);
-    }
+    // public void detach (Machine subject){
+    //     subjects.remove(subject);
+    // }
 }
