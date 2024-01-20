@@ -1,47 +1,52 @@
 <template>
   <div class="hello">
-    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }">
+    <v-dialog v-model="isActive" persistent width="1024">
+        <template v-slot:activator="{ props }">
+    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }" v-bind="props">
       <v-icon v-if="icons[index]!==''" :color="iconcolors[index]">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
-
-    <v-dialog v-model="props">
-      <template v-slot:activator="{ props }">
-        <v-btn
-        color="primary"
-        v-bind="props"
-        prepend-icon="mdi-pen"
-        >
-        Compose
-    </v-btn>
-</template>
-          <v-card width="600px" height="720px" title="Custom color input">
-            <v-card-actions>
-              <v-text-field
-                clearable
-                hide-details="auto"
-                label="Enter color"
-                class="mr-3"
-              ></v-text-field>
-            </v-card-actions>
-
-            <!-- List below the input field -->
-            <v-card-actions>
-              <v-list>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Custom colors</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  label="Enter the colors"
+                  required
+                  v-model="writtencolor"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-list lines="one">
                 <v-list-item
-                  v-for="(co,index) in customcolors"
+                  v-for="(n,index) in customcolors"
                   :key="index"
-                  :title="co"
+                  :title="n"
                 ></v-list-item>
               </v-list>
-            </v-card-actions>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn text="Save" @click="addColor(writtencolor)"></v-btn>
-              <v-btn text="Close" @click="isActive=false"></v-btn>
-            </v-card-actions>
-          </v-card>
-        
-      </v-dialog>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue-darken-1" variant="text" @click="isActive = false">
+            Close
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="addColor(writtencolor)"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -50,8 +55,8 @@
 export default {
   
   name: 'taskBar',
-  data(){
-    return{
+  data:()=>({
+    
     buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation",'connect items','custom Input'],
     icons:["mdi-play","mdi-stop",'mdi-factory','mdi-queue-first-in-last-out','mdi-pause','mdi-replay','','mdi-arrow-right-bold',''],
     iconcolors:["green",'red','black','black','red','black','black','black'],
@@ -59,10 +64,11 @@ export default {
     customcolors:[],
     isActive:false,
     writtencolor:'red'
-
-    }
-  },
+  }),
   methods:{
+    open(){
+      this.isActive=true;
+    },
     handleclick(index){
       this.clickedButton=index;
       switch(index){
