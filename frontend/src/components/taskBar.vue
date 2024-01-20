@@ -1,53 +1,9 @@
 <template>
   <div class="hello">
-    <v-dialog v-model="isActive" persistent width="1024">
-        <template v-slot:activator="{ props }">
-    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }" v-bind="props">
+    <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }">
       <v-icon v-if="icons[index]!==''" :color="iconcolors[index]">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
-
-      </template>
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Custom colors</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Enter the colors"
-                  required
-                  v-model="writtencolor"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-list lines="one">
-                <v-list-item
-                  v-for="(n,index) in customcolors"
-                  :key="index"
-                  :title="n"
-                ></v-list-item>
-              </v-list>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue-darken-1" variant="text" @click="isActive = false">
-            Close
-          </v-btn>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="addColor(writtencolor)"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      <input type="number" style="background-color: white; border-radius: 5px;" placeholder="number of products" min="0" v-model="numberOfProducts">
   </div>
 </template>
 
@@ -58,13 +14,13 @@ export default {
   name: 'taskBar',
   data:()=>({
     
-    buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation",'connect items','custom Input'],
-    icons:["mdi-play","mdi-stop",'mdi-factory','mdi-queue-first-in-last-out','mdi-pause','mdi-replay','','mdi-arrow-right-bold',''],
-    iconcolors:["green",'red','black','black','red','black','black','black'],
+    buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation",'connect items'],
+    icons:["mdi-play","mdi-stop",'mdi-factory','mdi-queue-first-in-last-out','mdi-pause','mdi-replay','','mdi-arrow-right-bold'],
+    iconcolors:["green",'red','black','black','red','black','black'],
     clickedButton:null,
     customcolors:[],
     isActive:false,
-    writtencolor:'red'
+    numberOfProducts:'number of products',
   }),
   methods:{
     open(){
