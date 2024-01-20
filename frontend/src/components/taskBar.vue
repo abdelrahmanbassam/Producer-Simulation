@@ -32,13 +32,15 @@ export default {
       }
       switch(index){
         case 0:
-          this.disablebutton[2]=true
-          this.disablebutton[3]=true
+          this.disablebutton[2]=true;
+          this.disablebutton[3]=true;
+          this.disablebutton[7]=true;
           this.play();
           break;
         case 1:
-        this.disablebutton[2]=false
-          this.disablebutton[3]=false
+        this.disablebutton[2]=false;
+          this.disablebutton[3]=false;
+          this.disablebutton[7]=false;
           this.stop();
           break
         case 2:
@@ -54,6 +56,10 @@ export default {
           this.replay();
           break;
         case 6:
+          this.clickedButton=null;
+          this.disablebutton[2]=false;
+          this.disablebutton[3]=false;
+          this.disablebutton[7]=false;
           this.newSim();
           break;
         case 7:
