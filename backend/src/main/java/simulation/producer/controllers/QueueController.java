@@ -9,9 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class QueueController {
-    @PostMapping("/addQueue")
-    public String addQueue(@RequestBody String queue) {
-        return "Queue added";
-    }
-
+        
+        @PostMapping("/queue")
+        public String addQueue(@RequestBody String queue) {
+            return queue;
+        }
+    
+        @PostMapping("/queue/connect")
+        public String connectQueueToMachine(@RequestBody String queue) {
+            return queue;
+        }
+    
+        // @PostMapping("/queue/remove")
+        // public String removeQueue(@RequestBody String queue) {
+        //     return queue;
+        // }
 }

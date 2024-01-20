@@ -7,11 +7,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 public class MachineController {
-    // implement machine controller here
-    @PostMapping("/addMachine")
+    
+    @PostMapping("/machine")
     public String addMachine(@RequestBody String machine) {
-        return "Machine added";
+        return machine;
     }
-    
-    
+
+    @PostMapping("/machine/connect")
+    public String connectMAchineToQueue(@RequestBody String machine) {
+        return machine;
+    }
+
+    // @PostMapping("/machine/remove")
+    // public String removeMachine(@RequestBody String machine) {
+    //     return machine;
+    // }
 }
