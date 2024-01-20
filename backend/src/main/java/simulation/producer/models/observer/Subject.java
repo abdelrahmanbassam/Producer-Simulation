@@ -6,9 +6,6 @@ import java.util.List;
 public abstract class Subject {
     private List<Observer> observers = new ArrayList<Observer>();
 
-    public abstract void setState(Object state);
-    public abstract Object getState();
-
     public void attach (Observer observer){
         observers.add(observer);
     }
@@ -19,7 +16,7 @@ public abstract class Subject {
 
     public void notifyObservers (){
         for(Observer observer : observers){
-            observer.update();
+            observer.update(this);
         }
     }
 }
