@@ -338,18 +338,48 @@ export default {
         }
      return shape.attrs.radius;
     },
-    
-    startSimulation(){
-     this.clear();
-    },
+
     newSimulation(){
-     this.clear();
-     this.newQueueId=0;
-     this.newMachineId=0;
-     this.allArrows=[];
-     this.allMachines=[];
-     this.allQueues=[];
-     this.clearAndDraw();
+      this.clear();
+      this.newQueueId=0;
+      this.newMachineId=0;
+      this.allArrows=[];
+      this.allMachines=[];
+      this.allQueues=[];
+      this.clearAndDraw();
+    },
+    
+    startSimulation() {
+      this.clear();
+
+      // Initialize WebSocket connection
+      this.webSocket = new WebSocket("ws://spring-backend-websocket-url");
+
+      // WebSocket open event
+      this.webSocket.onopen = () => {
+        console.log("WebSocket connection established");
+        // You can send a message to the server if required
+        this.webSocket.send(JSON.stringify({ action: "startSimulation" }));
+      };
+
+      // WebSocket message event
+      this.webSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "allShapes") {
+          this.allShapes = data.shapes;
+        }
+      };
+
+      // WebSocket error event
+      this.webSocket.onerror = (error) => {
+        console.error("WebSocket error", error);
+      };
+
+      // WebSocket close event
+      this.webSocket.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+    
     }
     
    }
