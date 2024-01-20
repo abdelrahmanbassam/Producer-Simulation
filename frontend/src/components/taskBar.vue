@@ -11,7 +11,7 @@
         v-bind="props"
         prepend-icon="mdi-pen"
         >
-        Compose
+        
     </v-btn>
 </template>
           <v-card width="600px" height="720px" title="Custom color input">
@@ -97,7 +97,6 @@ export default {
 
     },
     play(){
-      this.$emit('addArrow');
       console.log("play");
     },
     stop(){
@@ -119,6 +118,7 @@ export default {
       console.log("newsim")
     },
     addArrow(){
+      this.$emit('addArrow');
       console.log('arrow pew pew');
     },
     addColor(){
@@ -138,13 +138,15 @@ export default {
   justify-content: center;  
   height: 7vh;
   width: auto;
-  background-color: grey;
+  /* background-color: grey; */
+  background-color: #365486;
   gap: 7px;
   align-items: center;
   border-radius: 10px;
 }
 .btn:hover{
   background-color: rgb(150, 202, 255);
+  background-color:#7FC7D9;
 }
 .btn.clicked{
   background-color: dodgerblue;

@@ -1,6 +1,6 @@
 <template>
     
-    <div>
+    <div class="page">
      <taskBar @addMachine="addMachine" @addQueue="addQueue" @addArrow="addArrow"/>
 
      <div class="konva-holder"></div>
@@ -41,8 +41,7 @@ export default {
      this.clear();
      this.isDrawingMachine=true;
 
-    },
-    
+    }, 
     addQueue(){
      this.clear();
      this.isDrawingQueue=true;
@@ -57,16 +56,13 @@ export default {
       this.isDrawingArrow=false;
       this.isStartedArrow=false;
     },
-    // async startUp() {
-    //  await this.createKonvaStage();
-    // },
 
     async createKonvaStage() {//creating stage with events (if i click a shape then i clicked the screen it will create a shape)create line in this(special case ) 
      const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
      const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
      const stageWidth = viewportWidth * (98.8 / 100); // Replace percentageWidth with your desired percentage
-     const stageHeight = viewportHeight * (80 /100); // Replace percentageHeight with your desired percentage
+     const stageHeight = viewportHeight * (85 /100); // Replace percentageHeight with your desired percentage
 
      this.stage = new Konva.Stage({
         container: '.konva-holder',
@@ -91,13 +87,13 @@ export default {
             //   newShape.y-=25/2;
             newShape.type='queue'
             newShape.fill='red'
-            newShape.text='Q'+this.newQueueId.toString();;
+            newShape.text='Q'+this.newQueueId.toString();
             this.newQueueId++;
           }
           else if(this.isDrawingMachine){
             newShape.type='machine'
             newShape.fill='blue'
-            newShape.text='M'+this.newMachineId.toString();;
+            newShape.text='M'+this.newMachineId.toString();
             this.newMachineId++;
           }
           this.addShape(newShape);
@@ -109,16 +105,16 @@ export default {
       
     },
 
-   async  clearAndDraw() {//clear the layer and draw the array elements again using this.drawShape 
+    async  clearAndDraw() {//clear the layer and draw the array elements again using this.drawShape 
         this.layer.destroyChildren();
         this.allShapes.forEach((shape) => {
             this.drawKonvaShape(shape);
         });
     },
+
     drawKonvaShape(shape) {// (print the array ) take a shape object and convert it to element of Konva and have the events of every shape(methods)
-      let newShape=null;
-    //   console.log(JSON.stringify(shape, null, 2));
-      if (shape.type === 'arrow') {
+       let newShape=null;
+        if (shape.type === 'arrow') {
         newShape =  new Konva.Arrow({
                 points: shape.points, // Define the start and end points of the arrow
                 pointerLength: 7.5,  // Length of the pointer head
@@ -133,8 +129,8 @@ export default {
             newShape.attrs.stroke='black';
             newShape.attrs.radius=40;
             
-      }
-      else if (shape.type === 'queue') {
+        }
+        else if (shape.type === 'queue') {
           newShape=new Konva.Rect(shape);
           newShape.attrs.stroke='black';
           newShape.attrs.width=80;
@@ -155,40 +151,38 @@ export default {
         });  
         
         let group = new Konva.Group();
-        newShape.on('click', () => {
-        if(this.isDrawingArrow&&!this.isStartedArrow){
-            this.isStartedArrow=true;
-            this.arrowSrc=newShape;
-        }
-        else if(this.isStartedArrow){
-                    console.log(JSON.stringify(newShape, null, 2));
-                    console.log(JSON.stringify(this.arrowSrc, null, 2));
-
-            if(newShape.attrs.x != this.arrowSrc.attrs.x || newShape.attrs.y != this.arrowSrc.attrs.y){
-                
-             this.arrowDest=newShape;
-             let arrow = {type:'arrow',points: this.adjustPoints(this.arrowSrc,this.arrowDest)} // Define the start and end points of the arrow
-             this.addShape(arrow);
-            
+        group.on('click', () => {
+            if(this.isDrawingArrow&&!this.isStartedArrow){
+                this.isStartedArrow=true;
+                this.arrowSrc=newShape;
             }
-             
-            this.isStartedArrow=false;
-        }
+            else if(this.isStartedArrow){
+                if(newShape.attrs.x != this.arrowSrc.attrs.x || newShape.attrs.y != this.arrowSrc.attrs.y){
+                        
+                    this.arrowDest=newShape;
+                    let arrow = {type:'arrow',points: this.adjustPoints(this.arrowSrc,this.arrowDest)} // Define the start and end points of the arrow
+                    this.addShape(arrow);
+                
+                }
+                
+                this.isStartedArrow=false;
+            }
       });
 
-      group.add(newShape);
-      group.add(text);
+        group.add(newShape);
+        group.add(text);
 
-      this.layer.add(group);
+        this.layer.add(group);
     },
-    //send shape to backend
-    addShape(shape){
-        const newShape = {...shape}; // Create a new objec
+    
+    addShape(shape){//send shape to backend
+        const newShape = {...shape}; // Create a new objec(Copy)
         this.allShapes.push(newShape);
         // console.log(JSON.stringify( this.allShapes, null, 2));
         this.clearAndDraw();
       //send it to backand return array of shapes 
     },
+
     adjustPoints(arrowSrc,arrowDest){
         let points=[arrowSrc.attrs.x,arrowSrc.attrs.y,arrowDest.attrs.x,arrowDest.attrs.y];
         let hDiff=arrowSrc.attrs.x-arrowDest.attrs.x;
@@ -229,28 +223,32 @@ export default {
       
        return points;
     },
+
     getDimentions(shape,dir){
-    if(shape.attrs.radius==null){
-      if(dir=='right'||dir=='left')
-       return shape.attrs.width/2;
-      else 
-      return shape.attrs.height/2;
-    }
+        if(shape.attrs.radius==null){
+        if(dir=='right'||dir=='left')
+        return shape.attrs.width/2;
+        else 
+        return shape.attrs.height/2;
+        }
      return shape.attrs.radius;
     }
     
    }
-    
- 
-
 }
 </script>
 
 <style>
 .konva-holder {
-  height: 80vh;
+  height: 84vh;
   width:100%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  background-color: #DCF2F1;
   /* padding-right:-1px  ; */
+}
+.page {
+  border: 1px solid black;
+  border-top-left-radius:10px ;
+  border-top-right-radius:10px ;
 }
 </style>
