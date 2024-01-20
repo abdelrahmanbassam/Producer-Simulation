@@ -97,7 +97,7 @@ export default {
 
     },
     play(){
-      console.log("play");
+      this.$emit('addMachine')
     },
     stop(){
       console.log("stop");
@@ -115,11 +115,10 @@ export default {
       console.log("replay");
     },
     newSim(){
-      console.log("newsim")
+      this.$emit('newSimulation');
     },
     addArrow(){
       this.$emit('addArrow');
-      console.log('arrow pew pew');
     },
     addColor(){
       this.customcolors.push()
