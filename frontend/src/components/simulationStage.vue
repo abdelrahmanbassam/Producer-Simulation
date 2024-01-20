@@ -90,7 +90,7 @@ export default {
           if(this.isDrawingQueue){
          
             newShape.type='queue'
-            newShape.fill='red'
+            newShape.fill='#A1EEBD'
             newShape.text='Q'+this.newQueueId.toString();
             this.newQueueId++;
             this.sendQueueToBack(newShape);
@@ -98,7 +98,7 @@ export default {
           }
           else if(this.isDrawingMachine){
             newShape.type='machine'
-            newShape.fill='blue'
+            newShape.fill='#FF6868'
             newShape.text='M'+this.newMachineId.toString();
             this.newMachineId++;
             this.sendMachineToBack(newShape);
@@ -140,6 +140,7 @@ export default {
         else if (type === 'machine') {
             newShape = new Konva.Circle(shape);
             newShape.attrs.stroke='black';
+            newShape.attrs.strokeWidth=1;
             newShape.attrs.radius=40;
             
         }
@@ -150,6 +151,8 @@ export default {
           newShape.attrs.height=50;
           newShape.attrs.offsetX=40, // Half of the width
           newShape.attrs.offsetY=25  // Half of the height
+          newShape.attrs.strokeWidth=1;
+
         }
         
         let text = new Konva.Text({
@@ -158,7 +161,7 @@ export default {
             text: shape.text,
             fontSize: 15,
             fontFamily: 'Calibri',
-            fill: 'white',
+            fill: 'black',
             align: 'center',
             verticalAlign: 'middle'
         });  
