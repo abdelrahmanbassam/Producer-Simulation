@@ -3,7 +3,7 @@
     <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }">
       <v-icon v-if="icons[index]!==''" :color="iconcolors[index]">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
-      <input type="number" style="background-color: white; border-radius: 5px;" placeholder="number of products" min="0" v-model="numberOfProducts">
+      
   </div>
 </template>
 
@@ -20,7 +20,6 @@ export default {
     clickedButton:null,
     customcolors:[],
     isActive:false,
-    numberOfProducts:'number of products',
   }),
   methods:{
     open(){
