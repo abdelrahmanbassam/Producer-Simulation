@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <v-btn class="btn" v-for="(but,index) in buttons" :key="index" @click="handleclick(index)" :class="{ 'clicked': clickedButton === index }" :disabled=disablebutton[index] >
-      <v-icon v-if="icons[index]!==''" :color="iconcolors[index]">{{ icons[index] }}</v-icon>
+      <v-icon v-if="icons[index]!==''" :color="iconcolors[index]" size="25">{{ icons[index] }}</v-icon>
       {{ but }}</v-btn>
   </div>
 </template>
@@ -13,9 +13,9 @@ export default {
   name: 'taskBar',
   data:()=>({
     
-    buttons:["play","Stop","Add Machine","Add Queue","Stop input","Replay", "New Simulation",'connect items'],
-    icons:["mdi-play","mdi-stop",'mdi-factory','mdi-queue-first-in-last-out','mdi-pause','mdi-replay','','mdi-arrow-right-bold'],
-    iconcolors:["green",'red','black','black','red','black','black'],
+    buttons:["play","Stop","Stop input","Replay","New Simulation", "Add Machine","Add Queue",'connect items'],
+    icons:["mdi-play","mdi-stop",'mdi-pause','mdi-replay','','mdi-factory','mdi-queue-first-in-last-out','mdi-arrow-right-bold'],
+    iconcolors:["green",'red','red','black','black','black','black'],
     disablebutton:Array(8).fill(false),
     clickedButton:null,
     customcolors:[],
@@ -44,30 +44,27 @@ export default {
           this.stop();
           break
         case 2:
-          this.addMachine();
+        this.stopInput();
           break;
         case 3:
-          this.addQueue();
-          break;
-        case 4:
-          this.stopInput();
-          break;
-        case 5:
           this.replay();
           break;
-        case 6:
-          this.clickedButton=null;
+        case 4:
+        this.clickedButton=null;
           this.disablebutton[2]=false;
           this.disablebutton[3]=false;
           this.disablebutton[7]=false;
           this.newSim();
           break;
+        case 5:
+          this.addMachine();
+          break; 
+        case 6:
+          this.addQueue();
+          break;
         case 7:
           this.addArrow();
           break;
-        case 8:
-          this.isActive=true;
-          break; 
       }
 
     },
