@@ -8,6 +8,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
+import simulation.producer.managers.SimulationManager;
+
 @Controller
 public class WebSocketController {
 
@@ -16,6 +18,6 @@ public class WebSocketController {
 
     @MessageMapping("/sendUpdate")
     public void sendUpdate(String message) {
-        messagingTemplate.convertAndSend("/topic/updates", message);
+        messagingTemplate.convertAndSend("/topic/updates", SimulationManager.getInstance().getMachines());
     }
 }
