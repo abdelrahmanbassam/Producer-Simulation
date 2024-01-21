@@ -22,6 +22,14 @@ public class SimulationManager {
         return instance;
     }
 
+    public ArrayList<Queue> getQueues() {
+        return queues;
+    }
+
+    public ArrayList<Machine> getMachines() {
+        return machines;
+    }
+
     //start simulation
     public void start() {
         try {
