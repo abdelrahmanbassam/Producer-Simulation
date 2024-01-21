@@ -1,4 +1,4 @@
-package simulation.producer.controllers;
+package simulation.producer.api;
 
 import org.springframework.web.bind.annotation.RestController;
 

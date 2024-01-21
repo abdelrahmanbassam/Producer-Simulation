@@ -1,4 +1,4 @@
-package simulation.producer.controllers;
+package simulation.producer.api;
 
 import java.util.ArrayList;
 
