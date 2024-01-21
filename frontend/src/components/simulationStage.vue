@@ -81,8 +81,7 @@ export default {
      let newShape={};
 
      this.stage.on('click', (e) => {
-        // console.log(this.stage.getPointerPosition().x)
-        // console.log(this.stage.getPointerPosition().y)
+ 
         if(this.isDrawingQueue||this.isDrawingMachine){
             newShape.x = this.stage.getPointerPosition().x;
             newShape.y = this.stage.getPointerPosition().y;
@@ -127,6 +126,7 @@ export default {
 
     drawKonvaShape(shape,type) {// (print the array ) take a shape object and convert it to element of Konva and have the events of every shape(methods)
        let newShape=null;
+       let ParsedShape=this.parseToKonvaBack(shape,type);
         if (type=== 'arrow') {
         newShape =  new Konva.Arrow({
                 points: shape.points, // Define the start and end points of the arrow
@@ -138,14 +138,14 @@ export default {
             });
         } 
         else if (type === 'machine') {
-            newShape = new Konva.Circle(shape);
+            newShape = new Konva.Circle(ParsedShape);
             newShape.attrs.stroke='black';
             newShape.attrs.strokeWidth=1;
             newShape.attrs.radius=40;
             
         }
         else if (type === 'queue') {
-          newShape=new Konva.Rect(shape);
+          newShape=new Konva.Rect(ParsedShape);
           newShape.attrs.stroke='black';
           newShape.attrs.width=80;
           newShape.attrs.height=50;
@@ -158,7 +158,7 @@ export default {
         let text = new Konva.Text({
             x: newShape.attrs.x-10,
             y: newShape.attrs.y-10,
-            text: shape.text,
+            text: ParsedShape.text,
             fontSize: 15,
             fontFamily: 'Calibri',
             fill: 'black',
@@ -190,105 +190,115 @@ export default {
         group.add(text);
 
         this.layer.add(group);
-                console.log(JSON.stringify(newShape, null, 2));
 
     },
+    parseToKonvaBack(shape,type){
+      if(type=='arrow')
+       return shape;
+      let x={id:shape.id , x:parseFloat(shape.x), y:parseFloat(shape.y)}
+      if(type=='queue'){
+       x.text="Q"+shape.id.toString()+"\n"+shape.products.length.toString();
+       x.fill="#A1EEBD";
+      }
+      else {
+        x.text="M"+shape.id.toString();
+        x.fill=shape.currentColor;
+      }
+      return x;
+    },
+
     
-    addShape(shape,type){//send shape to backend
-        const newShape = {...shape}; // Create a new objec(Copy)
-        this.allShapes.push(newShape);
-        // console.log(JSON.stringify( this.allShapes, null, 2));
-        this.clearAndDraw();
-      //send it to backand return array of shapes 
-    },
 
-    sendQueueToBack(newQueue){
-        console.log(JSON.stringify( newQueue, null, 2));
-        const newQueue2 = {...newQueue}; // Create a new objec(Copy)
-        this.allQueues.push(newQueue2);
-        this.clearAndDraw();
-        // fetch('http://localhost:8081/addQueue'
-        //     , {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             params:{
-        //                 queueId: newQueue.id,
-        //                 queueX: newQueue.x,
-        //                 queueY: newQueue.y,
-        //                 queueColor: newQueue.Color,
-        //             }
-        //         })
-        //     }
-        //     )
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.allQueues = data;
-        //     })
-        //     .catch(error => console.error('Error changing list:', error));
-    },
-    sendMachineToBack(newMachine){
-        const newMachine2 = {...newMachine}; // Create a new objec(Copy)
-        console.log(2);
-        this.allMachines.push(newMachine2);
-        this.clearAndDraw();
-        // fetch('http://localhost:8081/addMachine'
-        //     , {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             params:{
-        //                 MachineId: newMachine.id,
-        //                 MachineX: newMachine.x,
-        //                 MachineY: newMachine.y,
-        //                 MachineColor: newMachine.Color,
-        //             }
-        //         })
-        //     }
-        //     )
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.allMachines = data;
-        //     })
-        //     .catch(error => console.error('Error changing list:', error));
-    },
-
+    
     conectShapes(arrow,srcShape,destShape){
         const newArrow = {...arrow}; // Create a new objec(Copy)
         this.allArrows.push(newArrow);
         this.clearAndDraw();
+
         let source='machine';
+        let machineId=srcShape.attrs.id;
+        let queueId=destShape.attrs.id;
         let destination='queue';
         if(srcShape.attrs.class=='Rectangle'){
             let temp=source
             source=destination
             destination=temp;
+
+            queueId=srcShape.attrs.id;
+            machineId=destShape.attrs.id;
+
         }
-        // fetch('http://localhost:8081/'+'connect'+source+destination
-        //     , {
-        //         method: 'PUT',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             params:{
-        //                 MachineId: newMachine.id,
-        //                 MachineX: newMachine.x,
-        //                 MachineY: newMachine.y,
-        //                 MachineColor: newMachine.Color,
-        //             }
-        //         })
-        //     }
-        //     )
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.allMachines = data;
-        //     })
-        //     .catch(error => console.error('Error changing list:', error));
+        fetch('http://localhost:8081/'+source+'/connect'
+            , {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  data:{
+                        queueId: queueId,
+                        machineId: machineId,
+                    }
+                })
+            }
+            )
+            // .then(response => response.json())
+            // .then(data => {
+            //     this.allMachines = data;
+            // })
+            .catch(error => console.error('Error changing list:', error));
+    },
+
+    sendQueueToBack(newQueue){
+        // const newQueue2 = {...newQueue}; // Create a new objec(Copy)
+        // this.allQueues.push(newQueue2);
+        
+        fetch('// http://localhost:8080/queue/add'
+            , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  data:{
+                        x: newQueue.x.toString(),
+                        y: newQueue.y.toString(),
+                        // defaultColor: newQueue.fill,
+                    }
+                })
+            }
+            )
+            .then(response => response.json())
+            .then(data => {
+                this.allQueues = data;
+                console.log(JSON.stringify(this.allQueues, null, 2));
+                this.clearAndDraw();
+            })
+            .catch(error => console.error('Error changing list:', error));
+    },
+
+    sendMachineToBack(newMachine){
+         fetch('http://localhost:8080/machine/add'
+            , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  data:{
+                        x: newMachine.x.toString(),
+                        y: newMachine.y.toString(),
+                        defaultColor: newMachine.fill,
+                    }
+                })
+            }
+            )
+            .then(response => response.json())
+            .then(data => {
+                this.allMachines = data;
+                this.clearAndDraw();
+            })
+            .catch(error => console.error('Error changing list:', error));
     },
 
     adjustPoints(arrowSrc,arrowDest){
