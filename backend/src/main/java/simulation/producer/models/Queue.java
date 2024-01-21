@@ -9,18 +9,16 @@ import simulation.producer.models.observer.Subject;
 
 public class Queue implements Observer{
     private static int count = 0;
-    private static String defaultColor;
 
     private int id;
     private BlockingQueue<Product> products = new LinkedBlockingQueue<>();
     private String x;
     private String y;
 
-    public Queue(String x, String y, String defaultColor){
+    public Queue(String x, String y){
         this.id = count++;
         this.x = x;
         this.y = y;
-        Queue.defaultColor = defaultColor;
     }
 
     @Override
