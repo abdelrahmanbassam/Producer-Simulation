@@ -77,7 +77,7 @@ export default {
       this.$emit('startSimulation')
     },
     stop(){
-      this.$emit('stopSimulation')
+      this.$emit('pauseSimulation');
     },
     addMachine(){
       this.$emit('addMachine');
@@ -86,10 +86,10 @@ export default {
       this.$emit('addQueue');
     },
     stopInput(){
-      console.log("stop input");
+      // this.$emit('pauseSimulation');
     },
     replay(){
-      console.log("replay");
+      this.$emit('replaySimulation');
     },
     newSim(){
       this.$emit('newSimulation');
