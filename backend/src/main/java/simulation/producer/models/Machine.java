@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Machine extends Subject implements Runnable{
 
@@ -18,10 +19,24 @@ public class Machine extends Subject implements Runnable{
     private String x;
     private String y;
 
-    private List<Queue> observerList = new ArrayList<Queue>();
+    private ArrayList<Queue> observerList = new ArrayList<Queue>();
     private Queue outQueue;
     private String currentColor;
     private int serviceTime;
+    private AtomicBoolean isRunning = new AtomicBoolean(true);
+    private boolean paused = false;
+    // private boolean state = true;
+
+
+    // private Thread threadReference;
+    
+    // public void setThreadReference(Thread threadReference) {
+    //     this.threadReference = threadReference;
+    // }
+    // public Thread getThreadReference() {
+    //     return threadReference;
+    // }
+
 
     public Machine(String x, String y, String defaultColor){
         this.id = count++;
@@ -31,15 +46,70 @@ public class Machine extends Subject implements Runnable{
         this.currentColor = defaultColor;
         Machine.defaultColor = defaultColor;
     }
-
+    
     // convert a rgb Color representation to hexa representation
-
+    
     // generate a random color in hexa representation
     public static String generateRandomColor(){
         Random random = new Random();
         return "#"+Integer.toHexString(random.nextInt(255)).substring(2)+Integer.toHexString(random.nextInt(255)).substring(2)+Integer.toHexString(random.nextInt(255)).substring(2);
     }
+    
+    public synchronized void process(Product currentProduct) throws Exception{
+        // this.state = false;
+        this.currentColor = currentProduct.getColor();
+        try {
+            System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
+            Thread.sleep(this.serviceTime);
+            while (paused) {wait();}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //send prcessed product to next queue
+        outQueue.addProduct(currentProduct);
+        this.currentColor = Machine.defaultColor;
+        // this.state = true;
+    }
 
+    public void notifyObservers() {
+        for (Queue observer : observerList) {
+            if(!isRunning.get()) break;
+            System.out.println("Machine "+this.id+" is notifying queue "+observer.getId());
+            observer.update(this);
+        }
+    }
+
+    public synchronized void pause() {
+        paused = true;
+    }
+
+    public synchronized void resume() {
+        paused = false;
+        notifyAll();
+    }
+
+    @Override
+    public void run() {
+        while(this.isRunning.get() || this.outQueue == null){
+            try {
+                notifyObservers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void stop(){
+        this.isRunning.set(false);
+    }
+
+    // public boolean isReady(){
+    //     return this.state;
+    // }
+
+    // public void setState(boolean state){
+    //     this.state = state;
+    // }
 
     public String getX(){
         return this.x;
@@ -62,7 +132,7 @@ public class Machine extends Subject implements Runnable{
         return observerList;
     }
 
-    public void setObserverList(List<Queue> observerList) {
+    public void setObserverList(ArrayList<Queue> observerList) {
         this.observerList = observerList;
     }
 
@@ -106,41 +176,6 @@ public class Machine extends Subject implements Runnable{
         observerList.remove(removeQueue);
     }
 
-    public synchronized void process(Product currentProduct){
-        this.currentColor = currentProduct.getColor();
-        try {
-            System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
-            Thread.sleep(this.serviceTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //send prcessed product to next queue
-        outQueue.addProduct(currentProduct);
-        this.currentColor = Machine.defaultColor;
-    }
-
-    public void notifyObservers() {
-        for (Queue observer : observerList) {
-            System.out.println("Machine "+this.id+" is notifying queue "+observer.getId());
-            observer.update(this);
-        }
-    }
-
-    //set color random
-    public static void setDefaultColor(){
-
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            try {
-                notifyObservers();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

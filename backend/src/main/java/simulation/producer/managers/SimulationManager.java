@@ -60,27 +60,20 @@ public class SimulationManager {
         }
     }
 
-    //pause simulation
-    public void pause() {
-        for(Machine machine : machines){
-            Thread thread = new Thread(machine);
-            thread.suspend();
-        }
+    public synchronized void pause() {
+        for (Machine machine : machines)
+            machine.pause();
     }
 
-    //resume simulation
-    public void resume() {
-        for(Machine machine : machines){
-            Thread thread = new Thread(machine);
-            thread.resume();
-        }
+    public synchronized void resume() {
+        for (Machine machine : machines) 
+            machine.resume();
     }
 
     //stop simulation
     public void stop() {
         for(Machine machine : machines){
-            Thread thread = new Thread(machine);
-            thread.stop();
+            machine.stop();
         }
     }
 
@@ -111,5 +104,22 @@ public class SimulationManager {
         MachineManager.getInstance().connectMAchineToQueue(3, 3);
         
         SimulationManager.getInstance().start();
+        // Thread thread = new Thread(new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         while(true){
+                    try {
+                        Thread.sleep(5000);
+                        System.out.println("pause");
+                        SimulationManager.getInstance().pause();
+                        Thread.sleep(10000);
+                        System.out.println("resume");
+                        SimulationManager.getInstance().resume();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+        //         }
+        //     }
+        // });
     }
 }
