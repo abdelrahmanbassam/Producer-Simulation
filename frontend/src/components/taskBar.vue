@@ -74,11 +74,10 @@ export default {
 
     },
     play(){
-
       this.$emit('startSimulation')
     },
     stop(){
-      console.log("stop");
+      this.$emit('stopSimulation')
     },
     addMachine(){
       this.$emit('addMachine');

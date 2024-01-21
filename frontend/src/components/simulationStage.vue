@@ -1,7 +1,7 @@
 <template>
     
     <div class="page">
-     <taskBar @addMachine="addMachine" @addQueue="addQueue" @addArrow="addArrow" @startSimulation="startSimulation" @newSimulation="newSimulation"/>
+     <taskBar @addMachine="addMachine" @addQueue="addQueue" @addArrow="addArrow" @startSimulation="startSimulation" @newSimulation="newSimulation" @stopSimulation="stopSimulation"/>
 
      <div class="konva-holder"></div>
     </div>
@@ -64,6 +64,7 @@ export default {
       this.isDrawingMachine=false;
       this.isDrawingArrow=false;
       this.isStartedArrow=false;
+      this.starting=false;
     },
 
     async createKonvaStage() {//creating stage with events (if i click a shape then i clicked the screen it will create a shape)create line in this(special case ) 
