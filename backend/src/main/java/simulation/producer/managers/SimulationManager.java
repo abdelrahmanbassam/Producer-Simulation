@@ -88,10 +88,10 @@ public class SimulationManager {
 
         // SimulationManager simulationManager = new SimulationManager();
         
-        QueueManager.getInstance().addQueue("1", "1", "hdh");
-        QueueManager.getInstance().addQueue("2", "2", "hdh");
-        QueueManager.getInstance().addQueue("3", "3", "hdh");
-        QueueManager.getInstance().addQueue("4", "4", "hdh");
+        QueueManager.getInstance().addQueue("1", "1");
+        QueueManager.getInstance().addQueue("2", "2");
+        QueueManager.getInstance().addQueue("3", "3");
+        QueueManager.getInstance().addQueue("4", "4");
         MachineManager.getInstance().addMachine("1", "1", "hdh");
         MachineManager.getInstance().addMachine("2", "2", "hdh");
         MachineManager.getInstance().addMachine("3", "3", "hdh");

@@ -18,12 +18,12 @@ public class QueueManager {
         return instance;
     }
 
-    public ArrayList<Queue> addQueue(String x, String y, String defaultColor) {
-        SimulationManager.getInstance().queues.add(new Queue(x, y, defaultColor));
+    public ArrayList<Queue> addQueue(String x, String y) {
+        SimulationManager.getInstance().queues.add(new Queue(x, y));
         return SimulationManager.getInstance().queues;
     }
 
-    public ArrayList<Queue> connectQueueToMachine(int queueId, int machineId) {
+    public void connectQueueToMachine(int queueId, int machineId) {
         for(Machine machine : SimulationManager.getInstance().machines){
             if(machine.getId() == machineId)
             for(Queue queue : SimulationManager.getInstance().queues){
@@ -33,16 +33,6 @@ public class QueueManager {
                 }
             }
         }
-        return SimulationManager.getInstance().queues;
     }  
-    
-    // public void removeQueue(int queueId) {
-    //     for(Queue queue : queues){
-    //         if(queue.getId() == queueId){
-    //             queues.remove(queue);
-    //             return;
-    //         }
-    //     }
-    // }
 
 }

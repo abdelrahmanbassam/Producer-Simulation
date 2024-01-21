@@ -24,7 +24,7 @@ public class MachineManager {
     }
 
 
-    public ArrayList<Machine> connectMAchineToQueue(int machineId, int queueId) {
+    public void connectMAchineToQueue(int machineId, int queueId) {
         for(Machine machine : SimulationManager.getInstance().machines){
             if(machine.getId() == machineId)
             for(Queue queue : SimulationManager.getInstance().queues){
@@ -34,16 +34,6 @@ public class MachineManager {
                 }
             }
         }
-        return SimulationManager.getInstance().machines;
     }
 
-    
-    // public void removeMachine(int machineId) {
-    //     for(Machine machine : machines){
-    //         if(machine.getId() == machineId){
-    //             machines.remove(machine);
-    //             return;
-    //         }
-    //     }
-    // }   
 }

@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import simulation.producer.managers.SimulationManager;
+import simulation.producer.models.ResponseObject;
 
 @Component
 public class SimulationUpdater {
@@ -15,10 +16,9 @@ public class SimulationUpdater {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @Scheduled(fixedRate = 500)
+    @Scheduled(fixedRate = 1000)
     public void sendSimulationUpdates() {
-        messagingTemplate.convertAndSend("/topic/updates", "skksksk");
-        messagingTemplate.convertAndSend("/topic/updates", "skksksk");
+        messagingTemplate.convertAndSend("/topic/updates", new ResponseObject(SimulationManager.getInstance().getMachines(), SimulationManager.getInstance().getQueues()));
         System.out.println(SimulationManager.getInstance().getMachines());
     }
 }

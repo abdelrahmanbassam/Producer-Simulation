@@ -28,6 +28,7 @@ public class Machine extends Subject implements Runnable{
         this.x = x;
         this.y = y;
         this.serviceTime = (new Random()).nextInt(2, 8)*1000;
+        this.currentColor = defaultColor;
         Machine.defaultColor = defaultColor;
     }
 
@@ -39,22 +40,6 @@ public class Machine extends Subject implements Runnable{
         return "#"+Integer.toHexString(random.nextInt(255)).substring(2)+Integer.toHexString(random.nextInt(255)).substring(2)+Integer.toHexString(random.nextInt(255)).substring(2);
     }
 
-
-    // //set color random in hexa representation
-    // public static void setDefaultColor(String hexaColor){
-    //     defaultColor = Color.decode(hexaColor);
-    // }
-
-    // //set color random in hexa representation
-    // public static void setDefaultColor(){
-    //     Random random = new Random();
-    //     defaultColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-    // }
-
-    // //send color in hexa representation
-    // public String getDefaultColor(){
-    //     return "#"+Integer.toHexString(defaultColor.getRGB()).substring(2);
-    // }
 
     public String getX(){
         return this.x;
