@@ -176,7 +176,44 @@ public class Machine extends Subject implements Runnable{
         observerList.remove(removeQueue);
     }
 
+    public synchronized void process(Product currentProduct){
+        this.currentColor = currentProduct.getColor();
+        try {
+            System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
+            Thread.sleep(this.serviceTime);
+            
+            //send prcessed product to next queue
+            outQueue.addProduct(currentProduct);
+            this.currentColor = Machine.defaultColor;
+            
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void notifyObservers() {
+        for (Queue observer : observerList) {
+            System.out.println("Machine "+this.id+" is notifying queue "+observer.getId());
+            observer.update(this);
+        }
+    }
+
+    //set color random
+    public static void setDefaultColor(){
+
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            try {
+                notifyObservers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
