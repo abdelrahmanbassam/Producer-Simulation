@@ -1,12 +1,11 @@
-package simulation.producer.models;
+package simulation.producer.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+
+import simulation.producer.managers.SimulationManager;
 
 @Controller
 public class WebSocketController {
@@ -16,6 +15,6 @@ public class WebSocketController {
 
     @MessageMapping("/sendUpdate")
     public void sendUpdate(String message) {
-        messagingTemplate.convertAndSend("/topic/updates", message);
+        messagingTemplate.convertAndSend("/topic/updates", SimulationManager.getInstance().getMachines());
     }
 }

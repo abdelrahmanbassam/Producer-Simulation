@@ -1,4 +1,4 @@
-package simulation.producer.controllers;
+package simulation.producer.api;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +9,7 @@ import simulation.producer.models.RequestObject;
 import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -24,16 +25,12 @@ public class MachineController {
         );
     }
 
-    @PostMapping("/machine/connect")
-    public ArrayList<Machine> connectMAchineToQueue(@RequestBody RequestObject requestObject) {
-        return MachineManager.getInstance().connectMAchineToQueue(
+    @PutMapping("/machine/connect")
+    public void connectMAchineToQueue(@RequestBody RequestObject requestObject) {
+        MachineManager.getInstance().connectMAchineToQueue(
             Integer.parseInt(requestObject.getData().get("machineId").toString()),
             Integer.parseInt(requestObject.getData().get("queueId").toString())
         );
     }
 
-    // @PostMapping("/machine/remove")
-    // public String removeMachine(@RequestBody String machine) {
-    //     return machine;
-    // }
 }

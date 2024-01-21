@@ -1,12 +1,11 @@
-package simulation.producer.controllers;
+package simulation.producer.api;
 
 import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
 
 import simulation.producer.managers.QueueManager;
 import simulation.producer.models.Queue;
@@ -20,21 +19,15 @@ public class QueueController {
         public ArrayList<Queue> addQueue(@RequestBody RequestObject requestObject) {
             return QueueManager.getInstance().addQueue(
                 requestObject.getData().get("x").toString(),
-                requestObject.getData().get("y").toString(),
-                requestObject.getData().get("defaultColor").toString()
+                requestObject.getData().get("y").toString()
             );
         }
     
-        @PostMapping("/queue/connect")
-        public ArrayList<Queue> connectQueueToMachine(@RequestBody RequestObject requestObject) {
-            return QueueManager.getInstance().connectQueueToMachine(
+        @PutMapping("/queue/connect")
+        public void connectQueueToMachine(@RequestBody RequestObject requestObject) {
+            QueueManager.getInstance().connectQueueToMachine(
                 Integer.parseInt(requestObject.getData().get("queueId").toString()),
                 Integer.parseInt(requestObject.getData().get("machineId").toString())
             );
         }
-    
-        // @PostMapping("/queue/remove")
-        // public String removeQueue(@RequestBody String queue) {
-        //     return queue;
-        // }
 }
