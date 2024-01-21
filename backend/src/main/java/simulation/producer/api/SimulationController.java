@@ -20,13 +20,14 @@ public class SimulationController {
     // @SendTo("/topic/updates")
     public String handleStop(String message) {
         SimulationManager.getInstance().stop();
-        return "Simulation stopped!";
+        // return "Simulation stopped!";
     }
 
     @MessageMapping("/pause")
     // @SendTo("/topic/updates")
     public String handlePause(String message) {
+
         SimulationManager.getInstance().pause();
-        return "Simulation paused!";
+        // return "Simulation paused!";
     }
 }
