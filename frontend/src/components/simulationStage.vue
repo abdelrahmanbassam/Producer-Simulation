@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import SockJS from 'sockjs-client';
+import Stomp from 'webstomp-client';
 import Konva from 'konva';
 import taskBar from './taskBar.vue'
 
@@ -26,6 +28,7 @@ export default {
       newMachineId:0,
       arrowSrc:null,
       arrowDest:null,
+      starting:false,
       isDrawingQueue:false,
       isDrawingMachine:false,
       isDrawingArrow:false,
@@ -36,6 +39,7 @@ export default {
 
    mounted() {
     this.createKonvaStage();
+    this.openChannel();
    },
 
    methods:{
@@ -192,6 +196,7 @@ export default {
         this.layer.add(group);
 
     },
+
     parseToKonvaBack(shape,type){
       if(type=='arrow')
        return shape;
@@ -207,28 +212,25 @@ export default {
       return x;
     },
 
-    
-
-    
     conectShapes(arrow,srcShape,destShape){
         const newArrow = {...arrow}; // Create a new objec(Copy)
         this.allArrows.push(newArrow);
         this.clearAndDraw();
-
         let source='machine';
+        let destination='queue';
         let machineId=srcShape.attrs.id;
         let queueId=destShape.attrs.id;
-        let destination='queue';
-        if(srcShape.attrs.class=='Rectangle'){
+        if(srcShape.className=='Rect'){
             let temp=source
             source=destination
             destination=temp;
 
             queueId=srcShape.attrs.id;
             machineId=destShape.attrs.id;
-
         }
-        fetch('http://localhost:8081/'+source+'/connect'
+        // console.log(source)
+        // console.log(queueId)
+        fetch('http://localhost:8080/'+source+'/connect'
             , {
                 method: 'PUT',
                 headers: {
@@ -242,18 +244,13 @@ export default {
                 })
             }
             )
-            // .then(response => response.json())
-            // .then(data => {
-            //     this.allMachines = data;
-            // })
+            
             .catch(error => console.error('Error changing list:', error));
     },
 
     sendQueueToBack(newQueue){
-        // const newQueue2 = {...newQueue}; // Create a new objec(Copy)
-        // this.allQueues.push(newQueue2);
-        
-        fetch('// http://localhost:8080/queue/add'
+      
+        fetch('http://localhost:8080/queue/add'
             , {
                 method: 'POST',
                 headers: {
@@ -271,7 +268,7 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.allQueues = data;
-                console.log(JSON.stringify(this.allQueues, null, 2));
+                // console.log(JSON.stringify(this.allQueues, null, 2));
                 this.clearAndDraw();
             })
             .catch(error => console.error('Error changing list:', error));
@@ -361,38 +358,51 @@ export default {
       this.allQueues=[];
       this.clearAndDraw();
     },
-    
     startSimulation() {
+      this.starting=true;
+      // Send a message to the '/app/start' endpoint
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.send("/app/start", {}, JSON.stringify({ message: "Start the simulation" }));
+      }
+      else {
+        console.error("Not connected to WebSocket");
+      }
+    },
+    stopSimulation() {
+      // Send a message to the '/app/start' endpoint
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.send("/app/stop", {}, JSON.stringify({ message: "stop the simulation !!!!" }));
+      }
+      else {
+        console.error("Not connected to WebSocket");
+      }
+    },
+    openChannel() {
       this.clear();
 
-      // Initialize WebSocket connection
-      this.webSocket = new WebSocket("ws://spring-backend-websocket-url");
+      const socket = new SockJS('http://localhost:8080/ws');
+      this.stompClient = Stomp.over(socket);
 
-      // WebSocket open event
-      this.webSocket.onopen = () => {
-        console.log("WebSocket connection established");
-        // You can send a message to the server if required
-        this.webSocket.send(JSON.stringify({ action: "startSimulation" }));
-      };
+      this.stompClient.connect({}, frame => {
 
-      // WebSocket message event
-      this.webSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === "allShapes") {
-          this.allShapes = data.shapes;
-        }
-      };
-
-      // WebSocket error event
-      this.webSocket.onerror = (error) => {
-        console.error("WebSocket error", error);
-      };
-
-      // WebSocket close event
-      this.webSocket.onclose = () => {
-        console.log("WebSocket connection closed");
-      };
-    
+        // Subscription to a topic
+        this.stompClient.subscribe('/topic/updates', message => {
+          // handle message
+          const messageBody = JSON.parse(message.body);
+          const machines = messageBody.machines; // Access the "machines" data
+          const queues = messageBody.queues; // Access the "machines" data
+          this.allMachines=machines;
+          this.allQueues  =queues;
+          // console.log(JSON.stringify(this.allQueues, null, 2));
+          // console.log(JSON.stringify(this.allMachines, null, 2));
+          if(this.starting){
+           this.clearAndDraw();
+          }
+        });
+      }, error => {
+        console.error('Error connecting:', error);
+      });
+      
     }
     
    }

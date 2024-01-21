@@ -111,12 +111,15 @@ public class Machine extends Subject implements Runnable{
         try {
             System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
             Thread.sleep(this.serviceTime);
+            
+            //send prcessed product to next queue
+            outQueue.addProduct(currentProduct);
+            this.currentColor = Machine.defaultColor;
+            
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //send prcessed product to next queue
-        outQueue.addProduct(currentProduct);
-        this.currentColor = Machine.defaultColor;
     }
 
     public void notifyObservers() {
