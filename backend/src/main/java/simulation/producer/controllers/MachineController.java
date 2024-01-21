@@ -2,7 +2,7 @@ package simulation.producer.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import simulation.producer.services.MachineManager;
+import simulation.producer.managers.MachineManager;
 import simulation.producer.models.Machine;
 import simulation.producer.models.RequestObject;
 

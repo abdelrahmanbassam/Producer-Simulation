@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 // import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.RequestBody;
 
+import simulation.producer.managers.QueueManager;
 import simulation.producer.models.Queue;
 import simulation.producer.models.RequestObject;
-import simulation.producer.services.QueueManager;
 
 
 @RestController

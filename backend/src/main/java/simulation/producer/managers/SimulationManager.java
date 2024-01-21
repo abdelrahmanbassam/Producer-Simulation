@@ -1,4 +1,4 @@
-package simulation.producer.services;
+package simulation.producer.managers;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -78,37 +78,30 @@ public class SimulationManager {
 
     public static void main(String[] args) {
 
-        // BlockingQueue<Product> products = new LinkedBlockingQueue<Product>();
-        // for (int i = 0; i < 10; i++) {
-        //     products.add(new Product());
-        // }
-
         // SimulationManager simulationManager = new SimulationManager();
         
-        // simulationManager.addQueue("1", "1", "hdh");
-        // simulationManager.addQueue("2", "2", "hdh");
-        // simulationManager.addQueue("3", "3", "hdh");
-        // simulationManager.addQueue("4", "4", "hdh");
-        // simulationManager.addMachine("1", "1", "hdh");
-        // simulationManager.addMachine("2", "2", "hdh");
-        // simulationManager.addMachine("3", "3", "hdh");
-        // simulationManager.addMachine("4", "4", "hdh");
+        QueueManager.getInstance().addQueue("1", "1", "hdh");
+        QueueManager.getInstance().addQueue("2", "2", "hdh");
+        QueueManager.getInstance().addQueue("3", "3", "hdh");
+        QueueManager.getInstance().addQueue("4", "4", "hdh");
+        MachineManager.getInstance().addMachine("1", "1", "hdh");
+        MachineManager.getInstance().addMachine("2", "2", "hdh");
+        MachineManager.getInstance().addMachine("3", "3", "hdh");
+        MachineManager.getInstance().addMachine("4", "4", "hdh");
         
-        // simulationManager.connectQueueToMachine(0, 0);
-        // simulationManager.connectQueueToMachine(0, 1);
-        // simulationManager.connectQueueToMachine(0, 2);
+        QueueManager.getInstance().connectQueueToMachine(0, 0);
+        QueueManager.getInstance().connectQueueToMachine(0, 1);
+        QueueManager.getInstance().connectQueueToMachine(0, 2);
         
-        // simulationManager.connectMAchineToQueue(0, 1);
-        // simulationManager.connectMAchineToQueue(1, 1);
-        // simulationManager.connectMAchineToQueue(2, 2);
+        MachineManager.getInstance().connectMAchineToQueue(0, 1);
+        MachineManager.getInstance().connectMAchineToQueue(1, 1);
+        MachineManager.getInstance().connectMAchineToQueue(2, 2);
         
-        // simulationManager.connectQueueToMachine(1, 3);
-        // simulationManager.connectQueueToMachine(2, 3);
+        QueueManager.getInstance().connectQueueToMachine(1, 3);
+        QueueManager.getInstance().connectQueueToMachine(2, 3);
         
-        // simulationManager.connectMAchineToQueue(3, 3);
+        MachineManager.getInstance().connectMAchineToQueue(3, 3);
         
-        // // simulationManager.setProducts(new ArrayList<Product>(products));
-        
-        // simulationManager.start();
+        SimulationManager.getInstance().start();
     }
 }
