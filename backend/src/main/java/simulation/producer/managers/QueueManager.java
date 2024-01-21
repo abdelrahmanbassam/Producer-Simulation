@@ -1,4 +1,4 @@
-package simulation.producer.services;
+package simulation.producer.managers;
 
 import java.util.ArrayList;
 
