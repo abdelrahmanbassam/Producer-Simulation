@@ -1,6 +1,5 @@
 package simulation.producer.models;
 
-import java.awt.Color;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
