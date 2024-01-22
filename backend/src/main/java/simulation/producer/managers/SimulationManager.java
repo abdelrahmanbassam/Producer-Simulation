@@ -110,14 +110,7 @@ public class SimulationManager {
         }
         replay = false;
         pause();
-        // for (int i = 0; i < careTaker.size(); i++) {
-        //     int numOfProducts = careTaker.get(i);
-        //     for(int j = 0; j < numOfProducts; j++){
-        //         queues.get(0).addProduct(new Product());
-        //         System.out.println("Product " +  " added to queue 0");
-        //     }
-
-        // }
+    
     }
 
 
