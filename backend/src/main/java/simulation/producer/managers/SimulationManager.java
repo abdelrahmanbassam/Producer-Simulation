@@ -95,13 +95,15 @@ public class SimulationManager {
 
     public synchronized void replay() {
         replay = true;
-        try {
-            for(ArrayList<Product> inputProducts : careTaker){
-                for(Product product : inputProducts){
-                    queues.get(0).addProduct(product);
-                    System.out.println("Product " + product.getId() + " added to queue 0");
-                }
+        for(Queue queue : queues)
+            queue.clear();
+        for(ArrayList<Product> inputProducts : careTaker){
+            for(Product product : inputProducts){
+                queues.get(0).addProduct(product);
+                System.out.println("Product " + product.getId() + " added to queue 0");
             }
+        }
+        try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();

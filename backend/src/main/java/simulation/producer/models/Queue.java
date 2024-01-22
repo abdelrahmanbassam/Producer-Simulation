@@ -40,6 +40,10 @@ public class Queue implements Observer{
         }
     }
 
+    public void clear(){
+        products.clear();
+    }
+
     public BlockingQueue<Product> getProducts() {
         return this.products;
     }
