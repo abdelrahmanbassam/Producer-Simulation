@@ -12,6 +12,7 @@ public class SimulationController {
     @MessageMapping("/start")
     // @SendTo("/topic/updates")
     public void handleStart(String message) {
+
         SimulationManager.getInstance().start();
         // return "Simulation started!";
     }
@@ -27,6 +28,20 @@ public class SimulationController {
     // @SendTo("/topic/updates")
     public void handlePause(String message) {
         SimulationManager.getInstance().pause();
+        // return "Simulation paused!";
+    }
+
+    @MessageMapping("/resume")
+    // @SendTo("/topic/updates")
+    public void handleResume(String message) {
+        SimulationManager.getInstance().resume();
+        // return "Simulation paused!";
+    }
+
+    @MessageMapping("/replay")
+    // @SendTo("/topic/updates")
+    public void handleReply(String message) {
+        SimulationManager.getInstance().replay();
         // return "Simulation paused!";
     }
 }

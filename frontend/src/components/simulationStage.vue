@@ -1,7 +1,7 @@
 <template>
     
     <div class="page">
-     <taskBar @addMachine="addMachine" @addQueue="addQueue" @addArrow="addArrow" @startSimulation="startSimulation" @newSimulation="newSimulation" @pauseSimulation="pauseSimulation"/>
+     <taskBar @addMachine="addMachine" @addQueue="addQueue" @addArrow="addArrow" @startSimulation="startSimulation" @newSimulation="newSimulation" @pauseSimulation="pauseSimulation" @replaySimulation="replaySimulation"/>
 
      <div class="konva-holder"></div>
     </div>
@@ -361,17 +361,27 @@ export default {
       this.allMachines=[];
       this.allQueues=[];
       this.clearAndDraw();
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.send("/app/newSimulation", {}, JSON.stringify({ message: "new Simulation" }));
+      }
+      else {
+        console.error("Not connected to WebSocket");
+      }
     },
     startSimulation() {
-      
-      this.clear()
-      this.isStarting=true;
+      // this.clear()
+      // this.isStarting=true;
+      console.log("startSimulation");
       if(this.isPausing){
         this.resumeSimulation();
       }
       else{
         // Send a message to the '/app/start' endpoint
         if (this.stompClient && this.stompClient.connected) {
+          
+          this.clear()
+          this.isStarting=true;
+          console.log("start")
           this.stompClient.send("/app/start", {}, JSON.stringify({ message: "Start the simulation" }));
         }
         else {
@@ -382,9 +392,10 @@ export default {
     
     pauseSimulation() {
       this.clear();
+      console.log("pause");
       this.isPausing=true;
       if (this.stompClient && this.stompClient.connected) {
-        this.stompClient.send("/app/stop", {}, JSON.stringify({ message: "pause the simulation !!!!" }));
+        this.stompClient.send("/app/pause", {}, JSON.stringify({ message: "pause the simulation !!!!" }));
       }
       else {
         console.error("Not connected to WebSocket");
@@ -393,7 +404,8 @@ export default {
 
     resumeSimulation() {
       this.clear();
-    
+      console.log("resume");
+      this.isStarting=true;
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.send("/app/resume", {}, JSON.stringify({ message: "resume the simulation !!!!" }));
       }
@@ -401,7 +413,18 @@ export default {
         console.error("Not connected to WebSocket");
       }
     },
-
+    replaySimulation(){
+      this.clear();
+      this.isStarting=true;
+      console.log("replay");
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.send("/app/replay", {}, JSON.stringify({ message: "replay the simulation !!!!" }));
+      }
+      else {
+        console.error("Not connected to WebSocket");
+      }
+    },
+    
     openChannel() {
       this.clear();
 
