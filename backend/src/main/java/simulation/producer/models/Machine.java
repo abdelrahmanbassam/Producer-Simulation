@@ -23,6 +23,7 @@ public class Machine extends Subject implements Runnable{
     private Queue outQueue;
     private String currentColor;
     private int serviceTime;
+    private int remainingTime;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
     private boolean paused = false;
 
@@ -31,6 +32,7 @@ public class Machine extends Subject implements Runnable{
         this.x = x;
         this.y = y;
         this.serviceTime = (new Random()).nextInt(2, 8)*1000;
+        this.remainingTime = this.serviceTime;
         this.currentColor = defaultColor;
         Machine.defaultColor = defaultColor;
     }
@@ -45,12 +47,15 @@ public class Machine extends Subject implements Runnable{
         this.currentColor = currentProduct.getColor();
         try {
             System.out.println("Machine "+this.id+" is processing product "+currentProduct.getId()+" for "+this.serviceTime+" ms");
-            Thread.sleep(this.serviceTime);
-            while (paused) {wait();}
+            while((remainingTime-=1000) > 0){
+                Thread.sleep(1000);
+                while (paused) {wait();}
+            }
+            this.remainingTime = this.serviceTime;
             //send prcessed product to next queue
             outQueue.addProduct(currentProduct);
             this.currentColor = Machine.defaultColor;
-            Thread.sleep(500);
+            Thread.sleep(400);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
