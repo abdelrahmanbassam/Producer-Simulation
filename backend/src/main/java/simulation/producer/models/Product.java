@@ -31,6 +31,10 @@ public class Product {
         return this;
     }
 
+    public static void setCount(int count){
+        Product.count = count;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)

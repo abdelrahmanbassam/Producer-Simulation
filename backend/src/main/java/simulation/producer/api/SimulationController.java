@@ -16,17 +16,16 @@ public class SimulationController {
         // return "Simulation started!";
     }
 
-    @MessageMapping("/stop")
-    // @SendTo("/topic/updates")
-    public void handleStop(String message) {
-        SimulationManager.getInstance().stop();
-        // return "Simulation stopped!";
-    }
+    // @MessageMapping("/stop")
+    // // @SendTo("/topic/updates")
+    // public void handleStop(String message) {
+    //     SimulationManager.getInstance().stop();
+    //     // return "Simulation stopped!";
+    // }
 
     @MessageMapping("/pause")
     // @SendTo("/topic/updates")
     public void handlePause(String message) {
-
         SimulationManager.getInstance().pause();
         // return "Simulation paused!";
     }

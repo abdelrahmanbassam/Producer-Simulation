@@ -36,4 +36,9 @@ public class MachineManager {
         }
     }
 
+    // public void pauseMachines() {
+    //     for(Machine machine : SimulationManager.getInstance().machines)
+    //             machine.pause();
+    // }
+
 }
