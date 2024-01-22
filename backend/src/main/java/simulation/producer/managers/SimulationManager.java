@@ -6,12 +6,19 @@ import java.util.Random;
 import simulation.producer.models.Machine;
 import simulation.producer.models.Product;
 import simulation.producer.models.Queue;
+import simulation.producer.models.ResponseObject;
+import simulation.producer.models.memento.CareTaker;
+import simulation.producer.models.memento.Memento;
+import simulation.producer.models.memento.Originator;
 
 public class SimulationManager {
     ArrayList<Queue> queues = new ArrayList<Queue>();
     ArrayList<Machine> machines = new ArrayList<Machine>(); 
     private static SimulationManager instance = null;
-
+    ArrayList<Integer> careTaker = new ArrayList<>();
+    boolean paused = false;
+    boolean replay = false;
+        
     private SimulationManager() {
     }
     
@@ -21,24 +28,30 @@ public class SimulationManager {
         }
         return instance;
     }
-
+    
     public ArrayList<Queue> getQueues() {
         return queues;
     }
-
+    
     public ArrayList<Machine> getMachines() {
         return machines;
     }
 
+    public synchronized void save(int numOfProducts){
+        careTaker.add(numOfProducts);
+    }   
+    
     //start simulation
     public void start() {
         try {
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(true){
+                    for(int i=0; i<3; i++){
                         try {
-                            for(int i = 0; i < (new Random()).nextInt(2, 5); i++){
+                            int numOfProducts = (new Random()).nextInt(2, 7);
+                            save(numOfProducts);
+                            for(int j = 0; j < numOfProducts; j++){
                                 queues.get(0).addProduct(new Product());
                                 System.out.println("Product " +  " added to queue 0");
                             }
@@ -61,21 +74,38 @@ public class SimulationManager {
     }
 
     public synchronized void pause() {
+        paused = true;
         for (Machine machine : machines)
             machine.pause();
     }
 
     public synchronized void resume() {
+        paused = false;
         for (Machine machine : machines) 
             machine.resume();
     }
 
-    //stop simulation
-    public void stop() {
-        for(Machine machine : machines){
-            machine.stop();
+    public synchronized void replay() {
+        replay = true;
+        Product.setCount(0);
+        for (int i = 0; i < careTaker.size(); i++) {
+            int numOfProducts = careTaker.get(i);
+            for(int j = 0; j < numOfProducts; j++){
+                queues.get(0).addProduct(new Product());
+                System.out.println("Product " +  " added to queue 0");
+            }
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        replay = false;
+        pause();
+        // for (Machine machine : machines)
+        //     machine.resume();
     }
+
 
     public static void main(String[] args) {
 
@@ -109,12 +139,9 @@ public class SimulationManager {
         //     public void run() {
         //         while(true){
                     try {
-                        Thread.sleep(5000);
-                        System.out.println("pause");
-                        SimulationManager.getInstance().pause();
-                        Thread.sleep(10000);
-                        System.out.println("resume");
-                        SimulationManager.getInstance().resume();
+                        Thread.sleep(20000);
+                        System.out.println("replay =============================================================");
+                        SimulationManager.getInstance().replay();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
