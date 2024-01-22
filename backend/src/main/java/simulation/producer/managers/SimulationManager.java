@@ -102,15 +102,14 @@ public class SimulationManager {
                 queues.get(0).addProduct(product);
                 System.out.println("Product " + product.getId() + " added to queue 0");
             }
-        }
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         replay = false;
         pause();
-    
     }
 
 
