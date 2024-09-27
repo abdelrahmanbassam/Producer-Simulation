@@ -2,13 +2,9 @@
 
 ### Introduction
 
-
-
 This project implements a Producer-Consumer system using various design patterns to ensure efficient and flexible code. The project involves designing and simulating a factory where machines and queues interact to process products. The application utilizes WebSocket for real-time updates and maintains a simple design for ease of use and understanding. Threads are employed to handle concurrent operations efficiently.
 
 ---
-https://github.com/user-attachments/assets/0970e9ef-fce3-430f-aedc-7bac42597035
-
 https://github.com/user-attachments/assets/ac5a4d26-e763-48e4-b3a8-8713c8921f56
 
 ### Design Features
