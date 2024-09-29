@@ -120,8 +120,6 @@ https://github.com/user-attachments/assets/ac5a4d26-e763-48e4-b3a8-8713c8921f56
     - Run the backend server:
         
         ```
-        sh
-        Copy code
         npm start
         ```
         
@@ -132,8 +130,6 @@ https://github.com/user-attachments/assets/ac5a4d26-e763-48e4-b3a8-8713c8921f56
     - Run the frontend server:
         
         ```
-        sh
-        Copy code
         npm run serve
         ```
         
